@@ -9,6 +9,7 @@ using iText.Layout.Properties;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using System.Web;
@@ -29,7 +30,7 @@ namespace Barcode_Scanner.Helper
             {
                 if (_font == null)
                 {
-                    _font = PdfFontFactory.CreateFont(FONT_PATH, PdfEncodings.IDENTITY_H, true);
+                    _font = PdfFontFactory.CreateFont(Properties.Resources.THSarabunNew, PdfEncodings.IDENTITY_H, true);
                 }
                 return _font;
             }
@@ -52,13 +53,14 @@ namespace Barcode_Scanner.Helper
         }
 
         protected const int DEFAULT_FONT_SIZE = 13;
-        protected const string LOGO_PATH = @"c:\scg.jpg";
-        protected const string FONT_PATH = "c:/windows/fonts/THSarabunNew.ttf";
+        //protected const string LOGO_PATH = @"c:\scg.jpg";
+        //protected const string FONT_PATH = @"fonts\THSarabunNew.ttf";
 
         public abstract void CreateBody();
 
         public byte[] Create()
         {
+            
             byte[] bytes;
             using (var st = new MemoryStream())
             {
@@ -95,7 +97,13 @@ namespace Barcode_Scanner.Helper
 
             //cell1
             var cell = new Cell();
-            var logo = new iText.Layout.Element.Image(ImageDataFactory.Create(LOGO_PATH));
+            byte[] byteLogo;
+            using(var ms = new MemoryStream())
+            {
+                Properties.Resources.SCG.Save(ms, ImageFormat.Png);
+                byteLogo = ms.ToArray();
+            }
+            var logo = new iText.Layout.Element.Image(ImageDataFactory.Create(byteLogo));
             logo.SetWidth(100);
             cell.Add(logo);
             cell.SetBorder(noBorder);
@@ -160,7 +168,7 @@ namespace Barcode_Scanner.Helper
             footerTable.AddCell(cell);
             //right
             cell = new Cell().SetTextAlignment(TextAlignment.RIGHT).SetBorder(noBorder);
-            cell.Add(new Paragraph("**Please sign and retuฟหกฟหกrn to us**"));
+            cell.Add(new Paragraph("**Please sign and return to us**"));
 
             if (settingFooter.hasReciver)
                 cell.Add(new Paragraph("Receiver : ...............").SetBold());
