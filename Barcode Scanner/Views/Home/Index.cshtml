@@ -1,0 +1,31 @@
+﻿@model string
+
+@{
+    ViewBag.Title = "Home Page";
+}
+
+@if(Model != null)
+{
+    <div class="alert alert-success">
+        <span><strong>Data: </strong> @Model</span>
+    </div>
+}
+
+<form method="post" enctype="multipart/form-data">
+    <div class="form-group">
+        <label class="col-sm-2 control-label">File for scan (Image or PDF)</label>
+        <div class="col-sm-3">
+            <input class="form-control" type="file" name="file" />
+        </div>
+    </div>
+    <input type="submit" value="Decode" class="btn btn-default"/>
+</form>
+
+<div class="row">
+    @for(int i = 1; i <= 8; i++)
+    {
+        <div class="col-sm-1">
+            <a class="btn btn-primary" href="/home/createpdf/@i">Form @i</a>
+        </div>
+    }
+</div>
